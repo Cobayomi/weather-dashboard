@@ -14,5 +14,8 @@ No steps to install simply click on the link to the deployed application located
 
 MIT license 
 
+#Screenshot
+
+![screenshot](weathersnap.PNG)
 
 
