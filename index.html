@@ -1,168 +1,100 @@
-var inputEl = document.querySelector("#location-input");
-var formEl = document.querySelector("form");
-var apiKey = "36bec115901ddc1cb3dd725c6d1f7f33";
-var forecastEL = document.querySelector("#forecast");
-var currentDayEl = document.querySelector("#currentDay");
-var dateEl = moment().format("MM-DD-YYYY");
-var fiveForcast = document.querySelector("#rowEl");
-var pastSearch = document.querySelector("#search-area");
+<!DOCTYPE html>
+<html lang="en">
 
-//stores searched cities in local storage
-var pastSearchCities = JSON.parse(localStorage.getItem("cities")) || [];
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  <link href="reset.css " rel="stylesheet">
+  <link href="style.css " rel="stylesheet">
+    <title>Weather Dashboard</title>
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
 
-for (var i = 0; i < pastSearchCities.length; i++) {
-  renderPastCitiesBtn(pastSearchCities[i]);
-}
+<body>
+    <!-- Jumborton -->
+    <div class="header">
+        <h2>Weather Dashboard</h2>
+    </div>
 
-var pastLocation = localStorage.getItem("city");
-if (pastLocation) {
-  currectDayForecast(pastLocation);
-  fiveDayForcast(pastLocation);
-}
 
-//search function for app
-function searchHandler(event) {
-  event.preventDefault();
-  var location = inputEl.value.trim();
+    <!-- Search bar -->
+    <div class="row">
+        <div class="col-12 col-md-3 bg-light">
+            <h3 class="search">Search for a city:</h3>
+            <form class="input-group" autocomplete="off" action="">
+                <input type="text" class="form-input" id="search-city" name="search-city" autofocus="true" />
+                <button type="submit" class="btn" id="search-button">Search</button>
+                <!--section for search city history-->
+                <button class="btn" type="button" id="clear-history">Clear history</button>
+            </form>
+            <ul class="list-group"></ul>
+        </div>
 
-  localStorage.setItem("cities", JSON.stringify(pastSearchCities));
-  localStorage.setItem("city", location);
+        <!-- Main Display -->
+        <div class="col-12 col-md-9">
+            <div class="card bg-white">
+                <div id="current-weather">
+                    <h3 class="city-name" id="current-city"><small id="current-date"></small></h3>
+                    <p><b>Temperature: </b><span class="current" id="temp-input"></span></p>
+                    <p><b>Wind Speed: </b><span class="current" id="wind-input"></span></p>
+                    <p><b>Humidity: </b><span class="current" id="humidity-input"></span></p>
+                    <p><b>UV Index: </b><span class="current bg-danger rounded" id="uv-input"></span></p>
+                </div>
+            </div>
 
-  currectDayForecast(location);
-  fiveDayForcast(location);
-}
+            <!-- 5-Days Forecast -->
+            <div class="col-sm-12" id="future-weather">
+                <h3 class="forecast-headding">5-Day Forecast:</h3>
+                <div class="row text-light">
+                    <div class="forecast-card col-sm-2 text-white ml-2 mb-3 p-2 mt-2 rounded">
+                        <p id="date0"></p>
+                        <p id="img0"></p>
+                        <p>Temp: <span id="temp0"></span></p>
+                        <p>Wind: <span id="wind0"></span></p>
+                        <p>Humidity: <span id="humidity0"></span></p>
+                    </div>
 
-//loades last cities
-function renderPastCitiesBtn(location) {
-  var pastInput = document.createElement("button");
+                    <div class="forecast-card col-sm-2 text-white ml-2 mb-3 p-2 mt-2 rounded">
+                        <p id="date1"></p>
+                        <p id="img1"></p>
+                        <p>Temp: <span id="temp1"></span></p>
+                        <p>Wind: <span id="wind1"></span></p>
+                        <p>Humidity: <span id="humidity1"></span></p>
+                    </div>
 
-  pastInput.type = "button";
-  pastInput.classList.add("btn-secondary");
-  pastInput.textContent = location;
-  pastSearch.append(pastInput);
+                    <div class="forecast-card col-sm-2 text-white ml-2 mb-3 p-2 mt-2 rounded">
+                        <p id="date2"></p>
+                        <p id="img2"></p>
+                        <p>Temp: <span id="temp2"></span></p>
+                        <p>Wind: <span id="wind2"></span></p>
+                        <p>Humidity: <span id="humidity2"></span></p>
+                    </div>
 
-  pastInput.addEventListener("click", function () {
-    txt = "";
-    var txt = this.innerHTML;
-    currectDayForecast(txt);
-    fiveDayForcast(txt);
-  });
-}
-//gets current forecast
-function currectDayForecast(location) {
-  var cityUrl =
-    "https://api.openweathermap.org/data/2.5/weather?q=" +
-    location +
-    "&units=imperial&appid=" +
-    apiKey;
+                    <div class="forecast-card col-sm-2 text-white ml-2 mb-3 p-2 mt-2 rounded">
+                        <p id="date3"></p>
+                        <p id="img3"></p>
+                        <p>Temp: <span id="temp3"></span></p>
+                        <p>Wind: <span id="wind3"></span></p>
+                        <p>Humidity: <span id="humidity3"></span></p>
+                    </div>
 
-  fetch(cityUrl)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (citys) {
-      currentDayEl.innerHTML = "";
+                    <div class="forecast-card col-sm-2 text-white ml-2 mb-3 p-2 mt-2 rounded">
+                        <p id="date4"></p>
+                        <p id="img4"></p>
+                        <p>Temp: <span id="temp4"></span></p>
+                        <p>Wind: <span id="wind4"></span></p>
+                        <p>Humidity: <span id="humidity4"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      console.log(citys);
-      var cityLocalStorage = localStorage.getItem("city");
-      var city = document.createElement("h3");
-      var temp = document.createElement("p");
-      var wind = document.createElement("p");
-      var humidity = document.createElement("p");
-      var weatherIcon = document.createElement("img");
-      var currentDay = document.createElement("div");
+        <!-- jQuery Js -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
 
-      weatherIcon.src =
-        "https://openweathermap.org/img/wn/" + citys.weather[0].icon + ".png";
-
-      city.classList.add("px-3");
-      city.classList.add("py-3");
-      temp.classList.add("px-3");
-      wind.classList.add("px-3");
-      humidity.classList.add("px-3");
-      currentDay.classList.add("border");
-
-      city.textContent = citys.name + " " + dateEl;
-      temp.textContent = "Temp: " + citys.main.temp + " F";
-      wind.textContent = "Wind: " + citys.wind.speed + " MPH";
-      humidity.textContent = "Humidity: " + citys.main.humidity + " %";
-
-      currentDayEl.prepend(currentDay);
-
-      currentDay.append(city);
-      city.append(weatherIcon);
-      currentDay.append(temp);
-      currentDay.append(wind);
-      currentDay.append(humidity);
-
-      if (!pastSearchCities.includes(cityLocalStorage)) {
-        renderPastCitiesBtn(cityLocalStorage);
-      }
-      console.log(
-        pastSearchCities,
-        cityLocalStorage,
-        !pastSearchCities.includes(cityLocalStorage)
-      );
-      pastSearchCities.push(cityLocalStorage);
-      inputEl.value = "";
-    })
-    .catch((error) => {
-      alert("Error 404: Not Found");
-      inputEl.value("");
-    });
-}
-
-//gets five day forecast
-function fiveDayForcast(location) {
-  var forcastUrl =
-    "https://api.openweathermap.org/data/2.5/forecast?q=" +
-    location +
-    "&units=imperial&appid=" +
-    apiKey;
-
-  fetch(forcastUrl)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (forcast) {
-      fiveForcast.innerHTML = " ";
-      console.log(forcast);
-      for (var i = 2; i < forcast.list.length; i += 8) {
-        var fiveDay = document.createElement("div");
-        var date = document.createElement("p");
-        var temp = document.createElement("p");
-        var wind = document.createElement("p");
-        var humidity = document.createElement("p");
-        var weatherIcon = document.createElement("img");
-
-        weatherIcon.src =
-          "https://openweathermap.org/img/wn/" +
-          forcast.list[i].weather[0].icon +
-          ".png";
-
-        date.classList.add("px-3");
-        temp.classList.add("px-3");
-        wind.classList.add("px-3");
-        humidity.classList.add("px-3");
-        fiveDay.classList.add("col");
-        fiveDay.classList.add("bg-fiveday");
-        fiveDay.classList.add("text-white");
-        fiveDay.classList.add("py-3");
-
-        date.textContent = moment.unix(forcast.list[i].dt).format("MM-DD-YYYY");
-        temp.textContent = "Temp: " + forcast.list[i].main.temp + " F";
-        wind.textContent = "Wind: " + forcast.list[i].wind.speed + " MPH";
-        humidity.textContent =
-          "Humidity: " + forcast.list[i].main.humidity + " %";
-
-        fiveForcast.append(fiveDay);
-        fiveDay.append(date);
-        fiveDay.append(weatherIcon);
-        fiveDay.append(temp);
-        fiveDay.append(wind);
-        fiveDay.append(humidity);
-      }
-    });
-}
-
-formEl.addEventListener("submit", searchHandler);
+</html>
