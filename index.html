@@ -1,44 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
+var inputEl = document.querySelector("#location-input");
+var formEl = document.querySelector("form");
+var apiKey = "36bec115901ddc1cb3dd725c6d1f7f33";
+var forecastEL = document.querySelector("#forecast");
+var currentDayEl = document.querySelector("#currentDay");
+var dateEl = moment().format("MM-DD-YYYY");
+var fiveForcast = document.querySelector("#rowEl");
+var pastSearch = document.querySelector("#search-area");
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link href="./asset/style.css" rel="stylesheet">
-    <title>Weather Dashboard</title>
-</head>
-<header class="py-4 px-3 p-lg-5 bg-header">
-    <h1 class="text-center text-white fw-bold">Weather Dashboard</h1>
-</header>
+//stores searched cities in local storage
+var pastSearchCities = JSON.parse(localStorage.getItem("cities")) || [];
 
-<body>
-    <div class="row  py-4 px-3 p-lg-5">
-        <div id="search-area" class="col-lg-3" style="border-right: solid 3px black">
-            <h2 class="fw-bold">Search for a City:</h2>
-            <form>
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="location-input" placeholder="San Diego">
-                </div>
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
+for (var i = 0; i < pastSearchCities.length; i++) {
+  renderPastCitiesBtn(pastSearchCities[i]);
+}
 
-        </div>
-        <div id="forecast" class="col-lg-9">
-            <div id="currentDay"></div>
-            <h3 class="fw-bold">5-Day Forecast:</h3>
-            <div id="rowEl" class="row row-cols-lg-5 g-4">
+var pastLocation = localStorage.getItem("city");
+if (pastLocation) {
+  currectDayForecast(pastLocation);
+  fiveDayForcast(pastLocation);
+}
 
-            </div>
-        </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-        crossorigin="anonymous"></script>
-    <script src="./asset/script.js"></script>
-</body>
+//search function for app
+function searchHandler(event) {
+  event.preventDefault();
+  var location = inputEl.value.trim();
 
-</html> 
+  localStorage.setItem("cities", JSON.stringify(pastSearchCities));
+  localStorage.setItem("city", location);
+
+  currectDayForecast(location);
+  fiveDayForcast(location);
+}
+
+//loades last cities
+function renderPastCitiesBtn(location) {
+  var pastInput = document.createElement("button");
+
+  pastInput.type = "button";
+  pastInput.classList.add("btn-secondary");
+  pastInput.textContent = location;
+  pastSearch.append(pastInput);
+
+  pastInput.addEventListener("click", function () {
+    txt = "";
+    var txt = this.innerHTML;
+    currectDayForecast(txt);
+    fiveDayForcast(txt);
+  });
+}
+//gets current forecast
+function currectDayForecast(location) {
+  var cityUrl =
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+    location +
+    "&units=imperial&appid=" +
+    apiKey;
+
+  fetch(cityUrl)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (citys) {
+      currentDayEl.innerHTML = "";
+
+      console.log(citys);
+      var cityLocalStorage = localStorage.getItem("city");
+      var city = document.createElement("h3");
+      var temp = document.createElement("p");
+      var wind = document.createElement("p");
+      var humidity = document.createElement("p");
+      var weatherIcon = document.createElement("img");
+      var currentDay = document.createElement("div");
+
+      weatherIcon.src =
+        "https://openweathermap.org/img/wn/" + citys.weather[0].icon + ".png";
+
+      city.classList.add("px-3");
+      city.classList.add("py-3");
+      temp.classList.add("px-3");
+      wind.classList.add("px-3");
+      humidity.classList.add("px-3");
+      currentDay.classList.add("border");
+
+      city.textContent = citys.name + " " + dateEl;
+      temp.textContent = "Temp: " + citys.main.temp + " F";
+      wind.textContent = "Wind: " + citys.wind.speed + " MPH";
+      humidity.textContent = "Humidity: " + citys.main.humidity + " %";
+
+      currentDayEl.prepend(currentDay);
+
+      currentDay.append(city);
+      city.append(weatherIcon);
+      currentDay.append(temp);
+      currentDay.append(wind);
+      currentDay.append(humidity);
+
+      if (!pastSearchCities.includes(cityLocalStorage)) {
+        renderPastCitiesBtn(cityLocalStorage);
+      }
+      console.log(
+        pastSearchCities,
+        cityLocalStorage,
+        !pastSearchCities.includes(cityLocalStorage)
+      );
+      pastSearchCities.push(cityLocalStorage);
+      inputEl.value = "";
+    })
+    .catch((error) => {
+      alert("Error 404: Not Found");
+      inputEl.value("");
+    });
+}
+
+//gets five day forecast
+function fiveDayForcast(location) {
+  var forcastUrl =
+    "https://api.openweathermap.org/data/2.5/forecast?q=" +
+    location +
+    "&units=imperial&appid=" +
+    apiKey;
+
+  fetch(forcastUrl)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (forcast) {
+      fiveForcast.innerHTML = " ";
+      console.log(forcast);
+      for (var i = 2; i < forcast.list.length; i += 8) {
+        var fiveDay = document.createElement("div");
+        var date = document.createElement("p");
+        var temp = document.createElement("p");
+        var wind = document.createElement("p");
+        var humidity = document.createElement("p");
+        var weatherIcon = document.createElement("img");
+
+        weatherIcon.src =
+          "https://openweathermap.org/img/wn/" +
+          forcast.list[i].weather[0].icon +
+          ".png";
+
+        date.classList.add("px-3");
+        temp.classList.add("px-3");
+        wind.classList.add("px-3");
+        humidity.classList.add("px-3");
+        fiveDay.classList.add("col");
+        fiveDay.classList.add("bg-fiveday");
+        fiveDay.classList.add("text-white");
+        fiveDay.classList.add("py-3");
+
+        date.textContent = moment.unix(forcast.list[i].dt).format("MM-DD-YYYY");
+        temp.textContent = "Temp: " + forcast.list[i].main.temp + " F";
+        wind.textContent = "Wind: " + forcast.list[i].wind.speed + " MPH";
+        humidity.textContent =
+          "Humidity: " + forcast.list[i].main.humidity + " %";
+
+        fiveForcast.append(fiveDay);
+        fiveDay.append(date);
+        fiveDay.append(weatherIcon);
+        fiveDay.append(temp);
+        fiveDay.append(wind);
+        fiveDay.append(humidity);
+      }
+    });
+}
+
+formEl.addEventListener("submit", searchHandler);

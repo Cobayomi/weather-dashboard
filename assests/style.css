@@ -1,52 +1,52 @@
 :root {
-    --header-gradient: linear-gradient(
-      90deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgba(9, 9, 121, 1) 35%,
-      rgba(0, 212, 255, 1) 100%
-    );
-    --wd-primary: #6991e3;
-    --wd-secondary: #aeaeae;
-    --wd-accent: #323d4f;
-  }
-  
-  /* Background Color */
-  
-  .bg-header {
-    background: var(--header-gradient);
-  }
-  
-  .bg-fiveday {
-    background: var(--wd-accent);
-  }
-  
-  /* Buttons */
-  
-  .btn-primary {
-    background: var(--wd-primary);
-    color: white;
-    border-radius: 5px;
-    display: flex;
-  }
-  
-  .btn-secondary {
-    background: var(--wd-secondary);
-    color: black;
-    border-radius: 5px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-  }
-  
-  .btn-secondary:hover {
-    background: var(--wd-primary);
-    color: white;
-  }
-  
-  /* Border */
-  
-  .border {
-    border: solid 3px black !important;
-    margin-bottom: 30px;
-  }
+  --header-gradient: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  --wd-primary: #6991e3;
+  --wd-secondary: #aeaeae;
+  --wd-accent: #323d4f;
+}
+
+/* Background Color */
+
+.bg-header {
+  background: var(--header-gradient);
+}
+
+.bg-fiveday {
+  background: var(--wd-accent);
+}
+
+/* Buttons */
+
+.btn-primary {
+  background: var(--wd-primary);
+  color: white;
+  border-radius: 5px;
+  display: flex;
+}
+
+.btn-secondary {
+  background: var(--wd-secondary);
+  color: black;
+  border-radius: 5px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.btn-secondary:hover {
+  background: var(--wd-primary);
+  color: white;
+}
+
+/* Border */
+
+.border {
+  border: solid 3px black !important;
+  margin-bottom: 30px;
+}
