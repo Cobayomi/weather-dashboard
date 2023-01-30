@@ -16,6 +16,7 @@ MIT license
 
 #Screenshot
 
-![screenshot](weathersnap.PNG)
+![screenshot](![weathersnap](https://user-images.githubusercontent.com/111473151/215378851-53f97db8-beae-452d-b257-4f623c9d3dca.PNG)
+)
 
 
