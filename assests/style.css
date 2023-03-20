@@ -4,7 +4,7 @@ body {
 
  /* Jumborton start*/
 .header {
-  background-image: linear-gradient(to right, rgb(95, 95, 171), rgb(11, 11, 85));
+  background-image: linear-gradient(to right, rgb(171, 95, 151), rgb(8, 8, 30));
    display: 75%;
    color: whitesmoke;
    text-align: right;
@@ -34,7 +34,7 @@ body {
  }
 
 .btn {    
-   background-color: #30408f;    
+   background-color: #308f89;    
    font-size: 1.3rem;
    text-decoration: none;
    padding: 6px 5px;
